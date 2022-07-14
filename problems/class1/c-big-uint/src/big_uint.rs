@@ -1,0 +1,460 @@
+#![allow(dead_code)]
+
+use std::cmp::Ordering;
+use std::fmt::{Display, Formatter};
+use std::ops;
+use std::str::FromStr;
+
+/// Big unsigned integer module
+///
+/// ## Example
+///
+/// ```
+/// # use crate::big_int::BigUInt;
+/// # fn main() {
+/// let a = BigUInt::one();
+/// let b = BigUInt::from(1_000_000usize);
+/// let c = BigUInt::from_str("1000000000000000000000");
+/// # }
+/// ```
+///
+/// ## Implementation
+///
+/// The big number is implemented by vector of `u64`.
+/// Each element can have the value of range `0` to `u64::MAX`.
+/// The value of the number is `u64::MAX + 1` when the vector is `[0, 1]`.
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct BigUInt {
+    inner: Vec<u64>,
+}
+
+impl BigUInt {
+    pub const fn zero() -> BigUInt {
+        BigUInt { inner: Vec::new() }
+    }
+
+    pub fn one() -> BigUInt {
+        BigUInt { inner: vec![1] }
+    }
+
+    /// Shift left once; same as *2 of the value
+    fn shl_once(&mut self) {
+        let mut carry = false;
+
+        for i in self.inner.iter_mut() {
+            *i = i.rotate_left(1);
+            let c = *i & 1;
+            *i = (*i ^ c) | carry as u64;
+            carry = c != 0;
+        }
+
+        if carry {
+            self.inner.push(1);
+        }
+    }
+
+    /// Shift right once; same as /2 of the value
+    fn shr_once(&mut self) {
+        let mut carry = false;
+
+        for i in self.inner.iter_mut().rev() {
+            let c = *i & 1 != 0;
+            *i >>= 1;
+            *i |= (carry as u64) << 63;
+            carry = c;
+        }
+
+        if let Some(&0) = self.inner.last() {
+            self.inner.pop();
+        }
+    }
+}
+
+/// Error for parsing `BigUInt`.
+#[derive(Debug, Copy, Clone)]
+pub enum ParseBigUIntError {
+    Empty,
+    NotStartingWithDigit,
+    LeadingZero,
+    InvalidCharacter,
+}
+
+impl Display for ParseBigUIntError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ParseBigUIntError::Empty => write!(f, "empty string"),
+            ParseBigUIntError::NotStartingWithDigit => {
+                write!(f, "number does not start with digit")
+            }
+            ParseBigUIntError::LeadingZero => write!(f, "number contains leading zero"),
+            ParseBigUIntError::InvalidCharacter => write!(f, "number contains invalid character"),
+        }
+    }
+}
+
+impl FromStr for BigUInt {
+    type Err = ParseBigUIntError;
+
+    /// String to big integer. Input can contain `,` and `_` and will be ignored.
+    /// If the string is invalid, it will return an error with description.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let c = BigUInt::from_str("1,000,000,000,000,000,000,000,000");
+    /// ```
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        todo!("s = {s}")
+    }
+}
+
+impl<'a, T> ops::Add<T> for &BigUInt
+where
+    T: Into<&'a BigUInt>,
+{
+    type Output = BigUInt;
+
+    /// Add operator between two numbers.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let a = BigUInt::from(100u64);
+    /// let b = BigUInt::from(150u64);
+    ///
+    /// assert_eq!(&a + &b, BigUInt::from(250u64));
+    /// ```
+    fn add(self, rhs: T) -> Self::Output {
+        let rhs = rhs.into();
+
+        if self.inner.len() < rhs.inner.len() {
+            rhs + self
+        } else {
+            todo!()
+        }
+    }
+}
+
+impl<'a, T> ops::Sub<T> for &BigUInt
+where
+    T: Into<&'a BigUInt>,
+{
+    type Output = BigUInt;
+
+    /// Sub operator between two numbers.
+    /// If the rhs is bigger than lhs, it should return `0`.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let a = BigUInt::from(150u64);
+    /// let b = BigUInt::from(100u64);
+    ///
+    /// assert_eq!(&a - &b, BigUInt::from(50u64));
+    /// ```
+    fn sub(self, rhs: T) -> Self::Output {
+        let rhs = rhs.into();
+
+        if self <= rhs {
+            BigUInt::zero()
+        } else {
+            todo!()
+        }
+    }
+}
+
+impl<'a, T> ops::Mul<T> for &BigUInt
+where
+    T: Into<&'a BigUInt>,
+{
+    type Output = BigUInt;
+
+    /// Mul operator between two numbers.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let a = BigUInt::from(150u64);
+    /// let b = BigUInt::from(100u64);
+    ///
+    /// assert_eq!(&a * &b, BigUInt::from(15000u64));
+    /// ```
+    fn mul(self, rhs: T) -> Self::Output {
+        let rhs = rhs.into();
+        todo!("rhs = {rhs:?}")
+    }
+}
+
+/// This function returns division and remainder of lhs and rhs.
+fn div_rem(lhs: &BigUInt, rhs: &BigUInt) -> (BigUInt, BigUInt) {
+    if rhs.inner.is_empty() {
+        panic!("division by zero");
+    } else if lhs < rhs {
+        (BigUInt::zero(), lhs.clone())
+    } else {
+        todo!()
+    }
+}
+
+impl<'a, T> ops::Div<T> for &BigUInt
+where
+    T: Into<&'a BigUInt>,
+{
+    type Output = BigUInt;
+
+    /// Div operator between two numbers.
+    /// If rhs is `0` it should panic as `division by zero`.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let a = BigUInt::from(150u64);
+    /// let b = BigUInt::from(11u64);
+    ///
+    /// assert_eq!(&a / &b, BigUInt::from(11u64));
+    /// ```
+    fn div(self, rhs: T) -> Self::Output {
+        let rhs = rhs.into();
+        div_rem(self, rhs).0
+    }
+}
+
+impl<'a, T> ops::Rem<T> for &BigUInt
+where
+    T: Into<&'a BigUInt>,
+{
+    type Output = BigUInt;
+
+    /// Rem operator between two numbers.
+    /// If rhs is `0` it should panic as `division by zero`.
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// let a = BigUInt::from(150u64);
+    /// let b = BigUInt::from(11u64);
+    ///
+    /// assert_eq!(&a % &b, BigUInt::from(7u64));
+    /// ```
+    fn rem(self, rhs: T) -> Self::Output {
+        let rhs = rhs.into();
+        div_rem(self, rhs).1
+    }
+}
+
+impl PartialOrd for BigUInt {
+    /// Comparison operator between two numbers.
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// let a = BigUInt::from(150u64);
+    /// let b = BigUInt::from(100u64);
+    ///
+    /// assert!(a > b);
+    /// ```
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        todo!("other = {other:?}")
+    }
+}
+
+impl Display for BigUInt {
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
+        // todo: change `_f` to `f`
+        todo!()
+    }
+}
+
+macro_rules! big_uint_from_impl {
+    ($i:ty) => {
+        impl From<$i> for BigUInt {
+            fn from(x: $i) -> Self {
+                BigUInt {
+                    inner: vec![x as u64],
+                }
+            }
+        }
+    };
+}
+
+big_uint_from_impl!(u8);
+big_uint_from_impl!(u16);
+big_uint_from_impl!(u32);
+big_uint_from_impl!(u64);
+big_uint_from_impl!(usize);
+
+#[cfg(test)]
+mod test {
+    use std::str::FromStr;
+
+    use super::BigUInt;
+
+    #[test]
+    fn string_test() {
+        assert_eq!(BigUInt::zero().to_string(), "0");
+        assert_eq!(BigUInt::one().to_string(), "1");
+
+        let a = BigUInt::from_str("1,000,000,000,000,000,000,000,000").unwrap();
+        assert_eq!(a.to_string(), "1000000000000000000000000");
+
+        let b = BigUInt::from_str("76345621812716237612783617236178236712378123").unwrap();
+        assert_eq!(
+            b.to_string(),
+            "76345621812716237612783617236178236712378123"
+        );
+    }
+
+    #[test]
+    fn add_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a + &b, c);
+        }
+
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000",
+            "2,000,000,000,000,000,000,000,000",
+        );
+        case(
+            "1234567890987654321",
+            "9876543210123456789",
+            "11111111101111111110",
+        );
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1",
+            "1,000,000,000,000,000,000,000,001",
+        );
+    }
+
+    #[test]
+    fn sub_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a - &b, c);
+        }
+
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000",
+            "0",
+        );
+        case(
+            "9876543210123456789",
+            "1234567890987654321",
+            "8641975319135802468",
+        );
+        case("1", "2", "0");
+    }
+
+    #[test]
+    fn mul_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a * &b, c);
+        }
+
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000",
+        );
+        case(
+            "9876543210123456789",
+            "1234567890987654321",
+            "12193263121170553265523548251112635269",
+        );
+        case("1", "0", "0");
+    }
+
+    #[test]
+    fn div_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a / &b, c);
+        }
+
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000",
+            "1",
+        );
+        case("9876543210123456789", "123456789", "80000000730");
+        case("123456789", "9876543210123456789", "0");
+    }
+
+    #[test]
+    #[should_panic(expected = "division by zero")]
+    fn div_by_zero_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a / &b, c);
+        }
+
+        case("1", "0", "0");
+    }
+
+    #[test]
+    fn rem_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a % &b, c);
+        }
+
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000",
+            "0",
+        );
+        case("9876543210123456789", "123456789", "819");
+        case("123456789", "9876543210123456789", "123456789")
+    }
+
+    #[test]
+    #[should_panic(expected = "division by zero")]
+    fn rem_by_zero_test() {
+        fn case(a: &str, b: &str, c: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            let c = BigUInt::from_str(c).unwrap();
+            assert_eq!(&a % &b, c);
+        }
+
+        case("1", "0", "0");
+    }
+
+    #[test]
+    fn cmp_test() {
+        fn case(a: &str, b: &str) {
+            let a = BigUInt::from_str(a).unwrap();
+            let b = BigUInt::from_str(b).unwrap();
+            assert!(a < b);
+        }
+
+        case(
+            "1,000,000,000,000,000,000,000,000",
+            "1,100,000,000,000,000,000,000,000",
+        );
+        case(
+            "100,000,000,000,000,000,000,000",
+            "1,000,000,000,000,000,000,000,000",
+        );
+        case(
+            "999_999_999_999_999_999_999_999",
+            "1,000,000,000,000,000,000,000,000",
+        );
+    }
+}

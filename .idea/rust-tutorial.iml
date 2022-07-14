@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class1/a-hello-world-sol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class1/a-hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class1/c-fib-recur/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class1/c-fib-recur-sol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class1/b-fibonacci/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class1/c-big-uint/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class1/b-fibonacci-sol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class1/c-big-uint-sol/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

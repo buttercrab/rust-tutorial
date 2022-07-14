@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "problems/class1/a-hello-world",
+    "problems/class1/b-fibonacci",
+    "problems/class1/c-big-uint",
+    "solutions/class1/a-hello-world-sol",
+    "solutions/class1/b-fibonacci-sol",
+    "solutions/class1/c-big-uint-sol"
+]
