@@ -76,7 +76,6 @@ fn main() {
     println!("by recursion: {}", fib_recur(n));
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;

@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
-use std::ops;
 use std::ops::ControlFlow;
 use std::str::FromStr;
+use std::{iter, ops};
 
 /// Big unsigned integer module
 ///
@@ -356,11 +356,7 @@ impl PartialOrd for BigUInt {
     /// ```
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         match self.inner.len().cmp(&other.inner.len()) {
-            Ordering::Equal => match self
-                .inner
-                .iter()
-                .rev()
-                .zip(other.inner.iter().rev())
+            Ordering::Equal => match iter::zip(self.inner.iter().rev(), other.inner.iter().rev())
                 .try_for_each(|(x, y)| match x.cmp(y) {
                     Ordering::Equal => ControlFlow::Continue(()),
                     x => ControlFlow::Break(x),

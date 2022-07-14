@@ -10,6 +10,12 @@
       <sourceFolder url="file://$MODULE_DIR$/problems/class1/c-big-uint/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/solutions/class1/b-fibonacci-sol/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/solutions/class1/c-big-uint-sol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class2/a-binary-tree/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class2/a-binary-tree-sol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class3/a-default-args/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/problems/class3/b-wc/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class3/a-default-args-sol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/solutions/class3/b-wc-sol/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

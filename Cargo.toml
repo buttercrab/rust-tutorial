@@ -3,7 +3,13 @@ members = [
     "problems/class1/a-hello-world",
     "problems/class1/b-fibonacci",
     "problems/class1/c-big-uint",
+    "problems/class2/a-binary-tree",
+    "problems/class3/a-default-args",
+    "problems/class3/b-wc",
     "solutions/class1/a-hello-world-sol",
     "solutions/class1/b-fibonacci-sol",
-    "solutions/class1/c-big-uint-sol"
+    "solutions/class1/c-big-uint-sol",
+    "solutions/class2/a-binary-tree-sol",
+    "solutions/class3/a-default-args-sol",
+    "solutions/class3/b-wc-sol",
 ]
