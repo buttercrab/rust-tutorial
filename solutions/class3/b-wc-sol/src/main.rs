@@ -2,12 +2,12 @@ use std::{env, fs};
 
 fn count_by_line(path: &str) -> usize {
     let s = fs::read_to_string(path).expect("error opening file");
-    s.chars().filter(|c| *c == '\n').count()
+    s.split('\n').count()
 }
 
 fn count_by_word(path: &str) -> usize {
     let s = fs::read_to_string(path).expect("error opening file");
-    s.chars().filter(|c| matches!(*c, ' ' | '\t')).count()
+    s.split(&[' ', '\t']).count()
 }
 
 fn count_character(path: &str) -> usize {
