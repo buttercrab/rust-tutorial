@@ -18,10 +18,13 @@
 //! ```
 
 // make default_args macro
-todo!();
+// todo
 
 #[cfg(test)]
 mod test {
+    /*
+    Uncomment this when testing
+
     default_args! {
         fn f(a: u32 = 10) -> u32 {
             a + 10
@@ -33,4 +36,5 @@ mod test {
         assert_eq!(f!(), 20);
         assert_eq!(f!(20), 30);
     }
+     */
 }

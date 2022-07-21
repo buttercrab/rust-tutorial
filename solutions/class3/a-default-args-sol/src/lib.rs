@@ -17,6 +17,7 @@
 //! # }
 //! ```
 
+#[macro_export]
 macro_rules! default_args {
     (
         fn $fn_name:ident ( $arg_name:ident : $arg_type:ty = $value:expr ) $( -> $ret_type:ty)? $body:block

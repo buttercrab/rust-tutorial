@@ -105,16 +105,22 @@ where
 /// ## Example
 ///
 /// ```
+/// use a_binary_tree_sol::tree::Tree;
+///
 /// let tree = Tree::new();
-///
-///
 /// ```
-struct Tree<T>
+pub struct Tree<T>
 where
     T: Ord,
 {
     root: Option<Rc<RefCell<Node<T>>>>,
     len: usize,
+}
+
+impl<T: Ord> Default for Tree<T> {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl<T> Tree<T>
@@ -127,6 +133,10 @@ where
 
     pub fn len(&self) -> usize {
         self.len
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
     }
 
     /// Check if the tree contains the value.
@@ -276,7 +286,7 @@ where
     }
 }
 
-struct Iter<'a, T>
+pub struct Iter<'a, T>
 where
     T: Ord,
 {
