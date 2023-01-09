@@ -74,7 +74,7 @@ impl<T> Clone for Arc<T> {
 impl<T> Drop for Arc<T> {
     fn drop(&mut self) {
         let inner = unsafe { self.inner.as_ref() };
-        if inner.counter.fetch_sub(1, Ordering::Relaxed) != 1 {
+        if inner.counter.fetch_sub(1, Ordering::Released) != 1 {
             return;
         }
 
